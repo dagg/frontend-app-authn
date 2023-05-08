@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import {injectIntl, useIntl} from '@edx/frontend-platform/i18n';
+import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, StatefulButton,
 } from '@edx/paragon';
@@ -11,50 +11,50 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
+import AccountActivationMessage from './AccountActivationMessage';
 import {
   backupLoginFormBegin,
+  dismissPasswordResetBanner,
   loginRequest,
 } from './data/actions';
 import { INVALID_FORM } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 import {
-  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration,
-  RenderInstitutionButton, SocialAuthProviders, ThirdPartyAuthAlert,
+  FormGroup,
+  PasswordField,
+  RedirectLogistration,
 } from '../common-components';
-import { getThirdPartyAuthContext } from '../common-components/data/actions';
-import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
-import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, ENTERPRISE_LOGIN_URL, PENDING_STATE, RESET_PAGE,
+  DEFAULT_STATE, RESET_PAGE,
 } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
-  getTpaHint,
-  getTpaProvider,
   setSurveyCookie,
   updatePathWithQueryParams,
-  windowScrollTo,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 
 const LoginPage = (props) => {
   const {
     backedUpFormData,
+    loginErrorCode,
+    loginErrorContext,
     loginResult,
     shouldBackupState,
+    showResetPasswordSuccessBanner,
     submitState,
     // Actions
     backupFormState,
-    loginRequest,
   } = props;
   const { formatMessage } = useIntl();
+  const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
+  const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
-  const [loginError, setLoginError] = useState({ errorCode: '' });
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
@@ -72,31 +72,18 @@ const LoginPage = (props) => {
     }
   }, [shouldBackupState, formFields, errors, backupFormState]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = { ...formFields };
-
-    const validationErrors = validateFormFields(formData);
-    if (validationErrors.emailOrUsername || validationErrors.password) {
-      setErrors({ ...validationErrors });
-      setLoginError({ errorCode: INVALID_FORM });
-      return;
+  useEffect(() => {
+    if (loginErrorCode) {
+      setErrorCode(prevState => ({ type: loginErrorCode, count: prevState.count + 1 }));
     }
+  }, [loginErrorCode]);
 
-    // add query params to the payload
-    const payload = { email_or_username: formData.emailOrUsername, password: formData.password, ...queryParams };
-    loginRequest(payload);
-  };
-
-  const handleOnChange = (event) => {
-    const { name, value } = event.target;
-    setFormFields(prevState => ({ ...prevState, [name]: value }));
-  };
-
-  const handleOnFocus = (event) => {
-    const { name } = event.target;
-    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
-  };
+  useEffect(() => {
+    if (loginResult.success) {
+      // TODO: Do we still need this cookie?
+      setSurveyCookie('login');
+    }
+  }, [loginResult]);
 
   const validateFormFields = (payload) => {
     const { emailOrUsername, password } = payload;
@@ -112,7 +99,36 @@ const LoginPage = (props) => {
     }
 
     return { ...fieldErrors };
-  }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (showResetPasswordSuccessBanner) {
+      props.dismissPasswordResetBanner();
+    }
+
+    const formData = { ...formFields };
+    const validationErrors = validateFormFields(formData);
+    if (validationErrors.emailOrUsername || validationErrors.password) {
+      setErrors({ ...validationErrors });
+      setErrorCode(prevState => ({ type: INVALID_FORM, count: prevState.count + 1 }));
+      return;
+    }
+
+    // add query params to the payload
+    const payload = { email_or_username: formData.emailOrUsername, password: formData.password, ...queryParams };
+    props.loginRequest(payload);
+  };
+
+  const handleOnChange = (event) => {
+    const { name, value } = event.target;
+    setFormFields(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const handleOnFocus = (event) => {
+    const { name } = event.target;
+    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
+  };
 
   const handleForgotPasswordLinkClick = () => {
     sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
@@ -127,10 +143,16 @@ const LoginPage = (props) => {
         success={loginResult.success}
         redirectUrl={loginResult.redirectUrl}
       />
-      <div className="mw-xs mt-3">
+      <div className="mw-xs mt-3 mb-2">
         <LoginFailureMessage
-          errorCode={loginError.errorCode}
+          errorCode={errorCode.type}
+          failureCount={errorCode.count}
+          context={loginErrorContext}
         />
+        <AccountActivationMessage
+          messageType={activationMsgType}
+        />
+        {showResetPasswordSuccessBanner && <ResetPasswordSuccess />}
         <Form id="sign-in-form" name="sign-in-form">
           <FormGroup
             name="emailOrUsername"
@@ -178,31 +200,59 @@ const LoginPage = (props) => {
       </div>
     </>
   );
-}
+};
 
 const mapStateToProps = state => {
   const loginPageState = state.login;
   return {
     backedUpFormData: loginPageState.loginFormData,
+    loginErrorCode: loginPageState.loginErrorCode,
+    loginErrorContext: loginPageState.loginErrorContext,
     loginResult: loginPageState.loginResult,
     shouldBackupState: loginPageState.shouldBackupState,
+    showResetPasswordSuccessBanner: loginPageState.showResetPasswordSuccessBanner,
     submitState: loginPageState.submitState,
   };
 };
 
 LoginPage.propTypes = {
+  backedUpFormData: PropTypes.shape({
+    formFields: PropTypes.shape({}),
+    errors: PropTypes.shape({}),
+  }),
+  loginErrorCode: PropTypes.string,
+  loginErrorContext: PropTypes.shape({
+    email: PropTypes.string,
+    redirectUrl: PropTypes.string,
+    context: PropTypes.shape({}),
+  }),
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
   }),
+  shouldBackupState: PropTypes.bool,
+  showResetPasswordSuccessBanner: PropTypes.bool,
   submitState: PropTypes.string,
   // Actions
   backupFormState: PropTypes.func.isRequired,
+  dismissPasswordResetBanner: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,
 };
 
 LoginPage.defaultProps = {
-  loginRequest: null,
+  backedUpFormData: {
+    formFields: {
+      emailOrUsername: '', password: '',
+    },
+    errors: {
+      emailOrUsername: '', password: '',
+    },
+  },
+  loginErrorCode: null,
+  loginErrorContext: {},
+  loginResult: {},
+  shouldBackupState: false,
+  showResetPasswordSuccessBanner: false,
   submitState: DEFAULT_STATE,
 };
 
@@ -210,6 +260,7 @@ export default connect(
   mapStateToProps,
   {
     backupFormState: backupLoginFormBegin,
+    dismissPasswordResetBanner,
     loginRequest,
   },
 )(injectIntl(LoginPage));

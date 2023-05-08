@@ -1,4 +1,8 @@
-import {BACKUP_LOGIN_DATA, LOGIN_PERSIST_FORM_DATA, LOGIN_REMOVE_PASSWORD_RESET_BANNER, LOGIN_REQUEST} from './actions';
+import {
+  BACKUP_LOGIN_DATA,
+  DISMISS_PASSWORD_RESET_BANNER,
+  LOGIN_REQUEST,
+} from './actions';
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 import { RESET_PASSWORD } from '../../reset-password';
 
@@ -14,8 +18,8 @@ export const defaultState = {
       emailOrUsername: '', password: '',
     },
   },
-  resetPassword: false,
   shouldBackupState: false,
+  showResetPasswordSuccessBanner: false,
   submitState: DEFAULT_STATE,
 };
 
@@ -25,7 +29,7 @@ const reducer = (state = defaultState, action = {}) => {
       return {
         ...state,
         shouldBackupState: true,
-      }
+      };
     case BACKUP_LOGIN_DATA.BEGIN:
       return {
         ...defaultState,
@@ -34,8 +38,8 @@ const reducer = (state = defaultState, action = {}) => {
     case LOGIN_REQUEST.BEGIN:
       return {
         ...state,
+        showResetPasswordSuccessBanner: false,
         submitState: PENDING_STATE,
-        resetPassword: false,
       };
     case LOGIN_REQUEST.SUCCESS:
       return {
@@ -43,37 +47,22 @@ const reducer = (state = defaultState, action = {}) => {
         loginResult: action.payload,
       };
     case LOGIN_REQUEST.FAILURE:
-      const { loginError, email } = action.payload;
+      const { email, loginError, redirectUrl } = action.payload;
       return {
         ...state,
         loginErrorCode: loginError.errorCode,
-        loginErrorContext: { ...loginError.context, email },
+        loginErrorContext: { ...loginError.context, email, redirectUrl },
         submitState: DEFAULT_STATE,
-      };
-    case LOGIN_REQUEST.RESET:
-      return {
-        ...state,
-        loginError: null,
       };
     case RESET_PASSWORD.SUCCESS:
       return {
         ...state,
-        resetPassword: true,
+        showResetPasswordSuccessBanner: true,
       };
-    case LOGIN_PERSIST_FORM_DATA: {
-      const { formData } = action.payload;
+    case DISMISS_PASSWORD_RESET_BANNER: {
       return {
         ...state,
-        loginFormData: {
-          ...state.loginFormData,
-          ...formData,
-        },
-      };
-    }
-    case LOGIN_REMOVE_PASSWORD_RESET_BANNER: {
-      return {
-        ...state,
-        resetPassword: false,
+        showResetPasswordSuccessBanner: false,
       };
     }
     default:

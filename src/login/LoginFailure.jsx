@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { getAuthService } from '@edx/frontend-platform/auth';
@@ -23,10 +23,18 @@ import {
   TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
 import messages from './messages';
+import { windowScrollTo } from '../data/utils';
 
 const LoginFailureMessage = (props) => {
   const { formatMessage } = useIntl();
-  const { context, errorCode } = props;
+  const authService = getAuthService();
+  const {
+    context, errorCode, failureCount,
+  } = props;
+
+  useEffect(() => {
+    windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
+  }, [errorCode, failureCount]);
 
   if (!errorCode) {
     return null;
@@ -159,7 +167,6 @@ const LoginFailureMessage = (props) => {
       break;
     case NUDGE_PASSWORD_CHANGE:
       // Need to clear the CSRF token here to fetch a new one because token is already rotated after successful login.
-      const authService = getAuthService();
       if (authService) {
         authService.getCsrfTokenService().clearCsrfTokenCache();
       }
@@ -198,7 +205,6 @@ const LoginFailureMessage = (props) => {
 
 LoginFailureMessage.defaultProps = {
   context: {},
-  errorCode: null,
 };
 
 LoginFailureMessage.propTypes = {
@@ -214,7 +220,8 @@ LoginFailureMessage.propTypes = {
     email: PropTypes.string,
     redirectUrl: PropTypes.string,
   }),
-  errorCode: PropTypes.string,
+  errorCode: PropTypes.string.isRequired,
+  failureCount: PropTypes.number.isRequired,
 };
 
 export default LoginFailureMessage;
