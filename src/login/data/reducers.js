@@ -1,23 +1,36 @@
-import { LOGIN_PERSIST_FORM_DATA, LOGIN_REMOVE_PASSWORD_RESET_BANNER, LOGIN_REQUEST } from './actions';
+import {BACKUP_LOGIN_DATA, LOGIN_PERSIST_FORM_DATA, LOGIN_REMOVE_PASSWORD_RESET_BANNER, LOGIN_REQUEST} from './actions';
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 import { RESET_PASSWORD } from '../../reset-password';
 
 export const defaultState = {
-  loginError: null,
+  loginErrorCode: '',
+  loginErrorContext: {},
   loginResult: {},
-  resetPassword: false,
   loginFormData: {
-    password: '',
-    emailOrUsername: '',
+    formFields: {
+      emailOrUsername: '', password: '',
+    },
     errors: {
-      emailOrUsername: '',
-      password: '',
+      emailOrUsername: '', password: '',
     },
   },
+  resetPassword: false,
+  shouldBackupState: false,
+  submitState: DEFAULT_STATE,
 };
 
 const reducer = (state = defaultState, action = {}) => {
   switch (action.type) {
+    case BACKUP_LOGIN_DATA.BASE:
+      return {
+        ...state,
+        shouldBackupState: true,
+      }
+    case BACKUP_LOGIN_DATA.BEGIN:
+      return {
+        ...defaultState,
+        loginFormData: { ...action.payload },
+      };
     case LOGIN_REQUEST.BEGIN:
       return {
         ...state,
@@ -30,9 +43,11 @@ const reducer = (state = defaultState, action = {}) => {
         loginResult: action.payload,
       };
     case LOGIN_REQUEST.FAILURE:
+      const { loginError, email } = action.payload;
       return {
         ...state,
-        loginError: action.payload.loginError,
+        loginErrorCode: loginError.errorCode,
+        loginErrorContext: { ...loginError.context, email },
         submitState: DEFAULT_STATE,
       };
     case LOGIN_REQUEST.RESET:
