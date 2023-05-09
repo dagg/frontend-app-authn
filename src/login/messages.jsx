@@ -10,7 +10,8 @@ const messages = defineMessages({
   'login.user.identity.label': {
     id: 'login.user.identity.label',
     defaultMessage: 'Username or email',
-    description: 'Label for user identity field to enter either username or email to login',
+    description:
+      'Label for user identity field to enter either username or email to login',
   },
   'login.password.label': {
     id: 'login.password.label',
@@ -30,7 +31,8 @@ const messages = defineMessages({
   'need.help.signing.in.collapsible.menu': {
     id: 'need.help.signing.in.collapsible.menu',
     defaultMessage: 'Need help signing in?',
-    description: 'A button for collapsible need help signing in menu on login page',
+    description:
+      'A button for collapsible need help signing in menu on login page',
   },
   'forgot.password.link': {
     id: 'forgot.password.link',
@@ -50,7 +52,8 @@ const messages = defineMessages({
   'need.other.help.signing.in.collapsible.menu': {
     id: 'need.other.help.signing.in.collapsible.menu',
     defaultMessage: 'Need other help signing in?',
-    description: 'A button for collapsible need other help signing in menu on forgot password page',
+    description:
+      'A button for collapsible need other help signing in menu on forgot password page',
   },
   'institution.login.button': {
     id: 'institution.login.button',
@@ -80,24 +83,29 @@ const messages = defineMessages({
   'login.other.options.heading': {
     id: 'login.other.options.heading',
     defaultMessage: 'Or sign in with:',
-    description: 'Text that appears above other sign in options like social auth buttons',
+    description:
+      'Text that appears above other sign in options like social auth buttons',
   },
   'non.compliant.password.title': {
     id: 'non.compliant.password.title',
     defaultMessage: 'We recently changed our password requirements',
-    description: 'A title that appears in bold before error message for non-compliant password',
+    description:
+      'A title that appears in bold before error message for non-compliant password',
   },
   'non.compliant.password.message': {
     id: 'non.compliant.password.message',
-    defaultMessage: 'Your current password does not meet the new security requirements. '
-                    + 'We just sent a password-reset message to the email address associated with this account. '
-                    + 'Thank you for helping us keep your data safe.',
+    defaultMessage:
+      'Your current password does not meet the new security requirements. ' +
+      'We just sent a password-reset message to the email address associated with this account. ' +
+      'Thank you for helping us keep your data safe.',
     description: 'Error message for non-compliant password',
   },
   'account.locked.out.message.1': {
     id: 'account.locked.out.message.1',
-    defaultMessage: 'To protect your account, it\'s been temporarily locked. Try again in 30 minutes.',
-    description: 'Part of message for when user account has been locked out after multiple failed login attempts',
+    defaultMessage:
+      "To protect your account, it's been temporarily locked. Try again in 30 minutes.",
+    description:
+      'Part of message for when user account has been locked out after multiple failed login attempts',
   },
   'first.time.here': {
     id: 'first.time.here',
@@ -116,13 +124,16 @@ const messages = defineMessages({
   },
   'email.format.validation.message': {
     id: 'email.format.validation.message',
-    defaultMessage: 'The email address you\'ve provided isn\'t formatted correctly.',
-    description: 'Validation message that appears when email address format is incorrect',
+    defaultMessage:
+      "The email address you've provided isn't formatted correctly.",
+    description:
+      'Validation message that appears when email address format is incorrect',
   },
   'username.or.email.format.validation.less.chars.message': {
     id: 'username.or.email.format.validation.less.chars.message',
     defaultMessage: 'Username or email must have at least 3 characters.',
-    description: 'Validation message that appears when username or email address is less than 3 characters',
+    description:
+      'Validation message that appears when username or email address is less than 3 characters',
   },
   'email.validation.message': {
     id: 'email.validation.message',
@@ -152,13 +163,16 @@ const messages = defineMessages({
   },
   'account.activation.success.message': {
     id: 'account.activation.success.message',
-    defaultMessage: 'You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign in to continue.',
-    description: 'Message show to learners when their account has been activated successfully',
+    defaultMessage:
+      'You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign in to continue.',
+    description:
+      'Message show to learners when their account has been activated successfully',
   },
   'account.activation.info.message': {
     id: 'account.activation.info.message',
     defaultMessage: 'This account has already been activated.',
-    description: 'Message shown when learner account has already been activated',
+    description:
+      'Message shown when learner account has already been activated',
   },
   'account.activation.error.message.title': {
     id: 'account.activation.error.message.title',
@@ -168,12 +182,14 @@ const messages = defineMessages({
   'account.activation.support.link': {
     id: 'account.activation.support.link',
     defaultMessage: 'contact support',
-    description: 'Link text used in account activation error message to go to learner help center',
+    description:
+      'Link text used in account activation error message to go to learner help center',
   },
   'tpa.account.link': {
     id: 'tpa.account.link',
     defaultMessage: '{provider} account',
-    description: 'Link text error message used to go to SSO when staff user try to login through password.',
+    description:
+      'Link text error message used to go to SSO when staff user try to login through password.',
   },
   // Email Confirmation Strings
   'account.confirmation.success.message.title': {
@@ -184,7 +200,8 @@ const messages = defineMessages({
   'account.confirmation.success.message': {
     id: 'account.confirmation.success.message',
     defaultMessage: 'Sign in to continue.',
-    description: 'Message show to learners when their account has been activated successfully',
+    description:
+      'Message show to learners when their account has been activated successfully',
   },
   'account.confirmation.info.message': {
     id: 'account.confirmation.info.message',
@@ -198,37 +215,44 @@ const messages = defineMessages({
   },
   'internal.server.error.message': {
     id: 'internal.server.error.message',
-    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
-    description: 'Error message that appears when server responds with 500 error code',
+    defaultMessage:
+      'An error has occurred. Try refreshing the page, or check your internet connection.',
+    description:
+      'Error message that appears when server responds with 500 error code',
   },
   'login.rate.limit.reached.message': {
     id: 'login.rate.limit.reached.message',
     defaultMessage: 'Too many failed login attempts. Try again later.',
-    description: 'Error message that appears when an anonymous user has made too many failed login attempts',
+    description:
+      'Error message that appears when an anonymous user has made too many failed login attempts',
   },
   'login.failure.header.title': {
     id: 'login.failure.header.title',
-    defaultMessage: 'We couldn\'t sign you in.',
+    defaultMessage: "We couldn't sign you in.",
     description: 'Login failure header message.',
   },
   'contact.support.link': {
     id: 'contact.support.link',
     defaultMessage: 'contact {platformName} support',
-    description: 'Link text used in inactive user error message to go to learner help center',
+    description:
+      'Link text used in inactive user error message to go to learner help center',
   },
   'login.incorrect.credentials.error': {
     id: 'login.incorrect.credentials.error',
-    defaultMessage: 'The username, email, or password you entered is incorrect. Please try again.',
+    defaultMessage:
+      'The username, email, or password you entered is incorrect. Please try again.',
     description: 'Error message for incorrect email or password',
   },
   'login.failed.attempt.error': {
     id: 'login.failed.attempt.error',
-    defaultMessage: 'You have {remainingAttempts} more sign in attempts before your account is temporarily locked.',
+    defaultMessage:
+      'You have {remainingAttempts} more sign in attempts before your account is temporarily locked.',
     description: 'Failed login attempts error message',
   },
   'login.locked.out.error.message': {
     id: 'login.locked.out.error.message',
-    defaultMessage: 'To protect your account, it’s been temporarily locked. Try again in {lockedOutPeriod} minutes.',
+    defaultMessage:
+      'To protect your account, it’s been temporarily locked. Try again in {lockedOutPeriod} minutes.',
     description: 'Account locked out user message',
   },
   'login.form.invalid.error.message': {
@@ -239,35 +263,43 @@ const messages = defineMessages({
   'login.incorrect.credentials.error.reset.link.text': {
     id: 'login.incorrect.credentials.error.reset.link.text',
     defaultMessage: 'reset your password',
-    description: 'Reset password link text for incorrect email or password credentials',
+    description:
+      'Reset password link text for incorrect email or password credentials',
   },
   'login.incorrect.credentials.error.before.account.blocked.text': {
     id: 'login.incorrect.credentials.error.before.account.blocked.text',
     defaultMessage: 'click here to reset it.',
-    description: 'Reset password link text for incorrect email or password credentials before blocking account',
+    description:
+      'Reset password link text for incorrect email or password credentials before blocking account',
   },
   // Vulnerable password change prompt
   'password.security.nudge.title': {
     id: 'password.security.nudge.title',
     defaultMessage: 'Password security',
-    description: 'Title for prompt that nudges user to change their vulnerable password',
+    description:
+      'Title for prompt that nudges user to change their vulnerable password',
   },
   'password.security.block.title': {
     id: 'password.security.block.title',
     defaultMessage: 'Password change required',
-    description: 'Title for prompt that asks user to change their vulnerable password',
+    description:
+      'Title for prompt that asks user to change their vulnerable password',
   },
   'password.security.nudge.body': {
     id: 'password.security.nudge.body',
-    defaultMessage: 'Our system detected that your password is vulnerable. '
-                    + 'We recommend you change it so that your account stays secure.',
-    description: 'Message copy for prompt that nudges user to change their vulnerable password',
+    defaultMessage:
+      'Our system detected that your password is vulnerable. ' +
+      'We recommend you change it so that your account stays secure.',
+    description:
+      'Message copy for prompt that nudges user to change their vulnerable password',
   },
   'password.security.block.body': {
     id: 'password.security.block.body',
-    defaultMessage: 'Our system detected that your password is vulnerable. '
-                    + 'Change your password so that your account stays secure.',
-    description: 'Message copy for prompt that asks user to change their vulnerable password',
+    defaultMessage:
+      'Our system detected that your password is vulnerable. ' +
+      'Change your password so that your account stays secure.',
+    description:
+      'Message copy for prompt that asks user to change their vulnerable password',
   },
   'password.security.close.button': {
     id: 'password.security.close.button',
