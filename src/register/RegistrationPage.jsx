@@ -36,9 +36,8 @@ import {
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
-import ThirdPartyAuth from './ThirdPartyAuth';
 import {
-  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
+  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert, ThirdPartyAuth
 } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import {
@@ -617,6 +616,7 @@ const RegistrationPage = (props) => {
                 secondaryProviders={secondaryProviders}
                 handleInstitutionLogin={handleInstitutionLogin}
                 thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+                helpingText='registration.other.options.heading'
               />
             </Form>
           </div>

@@ -4,14 +4,18 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
+import { Institution } from '@edx/paragon/icons';
+import {
+  Hyperlink, Icon,
+} from '@edx/paragon';
 
 import messages from './messages';
 import {
   RenderInstitutionButton,
   SocialAuthProviders,
-} from '../common-components';
+} from './index';
 import {
-  PENDING_STATE, REGISTER_PAGE,
+  PENDING_STATE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL,
 } from '../data/constants';
 
 /**
@@ -20,20 +24,32 @@ import {
 const ThirdPartyAuth = (props) => {
   const { formatMessage } = useIntl();
   const {
-    providers, secondaryProviders, currentProvider, handleInstitutionLogin, thirdPartyAuthApiStatus,
+    providers, 
+    secondaryProviders, 
+    currentProvider, 
+    handleInstitutionLogin, 
+    thirdPartyAuthApiStatus, 
+    helpingText, 
+    isLogin,
   } = props;
   const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
   const isSocialAuthActive = !!providers.length && !currentProvider;
   const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
 
+  const getEnterPriseLoginURL = () =>  getConfig().LMS_BASE_URL + ENTERPRISE_LOGIN_URL;
   return (
     <>
       {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
         <div className="mt-4 mb-3 h4">
-          {formatMessage(messages['registration.other.options.heading'])}
+          {formatMessage(messages[helpingText])}
         </div>
       )}
-
+      {(!isEnterpriseLoginDisabled && isSocialAuthActive && isLogin) && (
+          <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={getEnterPriseLoginURL()}>
+            <Icon src={Institution} className="institute-icon" />
+            {formatMessage(messages['enterprise.login.btn.text'])}
+          </Hyperlink>
+      )}
       {thirdPartyAuthApiStatus === PENDING_STATE ? (
         <Skeleton className="tpa-skeleton" height={36} count={2} />
       ) : (
