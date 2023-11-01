@@ -35,7 +35,7 @@
   "confirmation.message.title": "Ελέγξτε το e-mail σας",
   "confirmation.support.link": "επικοινωνήστε με την τεχνική υποστήριξη",
   "need.help.sign.in.text": "Χρειάζεστε βοήθεια;",
-  "additional.help.text": "For additional help, contact {platformName} support at",
+  "additional.help.text": "Για πρόσθετη βοήθεια, επικοινωνήστε με το {platformName} στο ακόλουθο email: ",
   "sign.in.text": "Σύνδεση",
   "extend.field.errors": "{emailError} παρακάτω",
   "invalid.token.heading": "Invalid password reset link",
